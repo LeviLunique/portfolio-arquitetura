@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  portfolio-arquitetura-postgres:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: D3v0nd0r@@
+      POSTGRES_DB: portfolio-arquitetura-postgres
+      POSTGRES_USER: levilunique
+    ports:
+      - "5432:5432"
+    networks:
+      - portfolio-arquitetura
+
+  portfolio-arquitetura-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - portfolio-arquitetura-postgres
+    ports:
+      - "8080:8080"
+    environment:
+      - spring.datasource.url=jdbc:postgresql://portfolio-arquitetura-postgres:5432/portfolio-arquitetura-postgres
+    networks:
+      - portfolio-arquitetura
+
+networks:
+  portfolio-arquitetura:
+    driver: bridge
